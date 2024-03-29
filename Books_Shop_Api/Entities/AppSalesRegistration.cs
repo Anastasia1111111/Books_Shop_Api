@@ -5,14 +5,14 @@ namespace Books_Shop_Api.Entities
 {
     public class AppSalesRegistration
     {
-        [Key]
+        
         public int Id { get; set; }
         public int BookId { get; set; }
-        [ForeignKey("BookId")]
+        public AppBooks? Book { get; set; }
         public int EmployeeId { get; set; }
-        [ForeignKey("EmployeeId")]
+        public AppEmployees? Employee { get; set; }
         public int ClientId { get; set; }
-        [ForeignKey("ClientId")]
+        public AppClients? Client { get; set; }
         public DateTime Date_of_Purchase { get; set; }
         public decimal TheFinalPrice { get; set; }
     }

@@ -4,7 +4,6 @@ namespace Books_Shop_Api.Entities
 {
     public class AppClients
     {
-        [Key]
         public int Id { get; set; }
         public string Name { get; set; }
         public string? Patronymic { get; set; }

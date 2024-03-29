@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Books_Shop_Api.Data.Migrations
+namespace Books_Shop_Api.Migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -30,7 +30,10 @@ namespace Books_Shop_Api.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Date_of_Birth")
+                    b.Property<DateTime?>("Date_of_Birth")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("Date_of_death")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -94,6 +97,8 @@ namespace Books_Shop_Api.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AuthorId");
+
                     b.ToTable("Books");
                 });
 
@@ -141,7 +146,7 @@ namespace Books_Shop_Api.Data.Migrations
                     b.Property<DateTime>("Date_of_Birth")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("Date_of_Dismissal")
+                    b.Property<DateTime?>("Date_of_Dismissal")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("Hirу_Date")
@@ -192,7 +197,51 @@ namespace Books_Shop_Api.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("EmployeeId");
+
                     b.ToTable("SalesRegistration");
+                });
+
+            modelBuilder.Entity("Books_Shop_Api.Entities.AppBooks", b =>
+                {
+                    b.HasOne("Books_Shop_Api.Entities.AppAuthors", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("Books_Shop_Api.Entities.AppSalesRegistration", b =>
+                {
+                    b.HasOne("Books_Shop_Api.Entities.AppBooks", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Books_Shop_Api.Entities.AppClients", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Books_Shop_Api.Entities.AppEmployees", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Employee");
                 });
 #pragma warning restore 612, 618
         }

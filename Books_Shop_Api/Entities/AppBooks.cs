@@ -6,10 +6,10 @@ namespace Books_Shop_Api.Entities
 {
     public class AppBooks
     {
-        [Key]
+        
         public int Id { get; set; }
         public int AuthorId { get; set; }
-        [ForeignKey("AuthorId")]
+        public AppAuthors? Author { get; set; }
         public string Name { get; set; }
         public DateTime Date_of_Publication { get; set; }
         public int Number_of_Pages { get; set; }
