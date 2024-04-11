@@ -27,7 +27,6 @@ namespace Books_Shop_Api.Controller
         {
             var saleRegistration = new AppSalesRegistration
             {
-                Id = appSaleRegistration.Id,
                 BookId = appSaleRegistration.BookId,
                 EmployeeId = appSaleRegistration.EmployeeId,
                 ClientId = appSaleRegistration.ClientId,
@@ -39,6 +38,46 @@ namespace Books_Shop_Api.Controller
             await _context.SaveChangesAsync();
 
             return saleRegistration;
+        }
+
+        [HttpPut("edit/{id}")]
+
+        public async Task<ActionResult<AppSalesRegistration>> EditSaleRegistration(AppSalesRegistration appSaleRegistration, int id)
+        {
+
+            var saleregistrationCheck = _context.Clients.Where(e => e.Id == id).AsNoTracking().FirstOrDefault();
+            if (saleregistrationCheck is null)
+                return BadRequest("Book object is null");
+
+            var saleRegistration = new AppSalesRegistration
+            {
+                Id = id,
+                BookId = appSaleRegistration.BookId,
+                EmployeeId = appSaleRegistration.EmployeeId,
+                ClientId = appSaleRegistration.ClientId,
+                Date_of_Purchase = appSaleRegistration.Date_of_Purchase,
+                TheFinalPrice = appSaleRegistration.TheFinalPrice
+            };
+
+            _context.SalesRegistration.Update(saleRegistration);
+            await _context.SaveChangesAsync();
+
+            return saleRegistration;
+        }
+
+        [HttpDelete("delete/{id}")]
+
+        public async Task<ActionResult<AppSalesRegistration>> DeleteSaleRegistration(int id)
+        {
+
+            var saleRegistrationCheck = _context.SalesRegistration.Where(e => e.Id == id).AsNoTracking().FirstOrDefault();
+            if (saleRegistrationCheck is null)
+                return BadRequest("Author object is null");
+
+            _context.SalesRegistration.Remove(saleRegistrationCheck);
+            await _context.SaveChangesAsync();
+
+            return saleRegistrationCheck;
         }
     }
 }
