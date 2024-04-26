@@ -59,7 +59,7 @@ namespace Books_Shop_Api.Migrations
                     Patronymic = table.Column<string>(type: "text", nullable: true),
                     Surname = table.Column<string>(type: "text", nullable: false),
                     Date_of_Birth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Hirу_Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Hiry_Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Date_of_Dismissal = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Job_Title = table.Column<string>(type: "text", nullable: false)
                 },

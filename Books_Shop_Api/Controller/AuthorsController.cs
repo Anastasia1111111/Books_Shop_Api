@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Books_Shop_Api.Data;
 using Books_Shop_Api.Entities;
+using Books_Shop_Api.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,24 +10,28 @@ namespace Books_Shop_Api.Controller
     public class AuthorsController : BaseShopController
     {
         private readonly DataContext _context;
-        private readonly IMapper _mapper;
         public AuthorsController(DataContext context)
         {
             _context = context;
         }
         [HttpGet]
 
-        public async Task<ActionResult<IEnumerable<AppAuthors>>> GetAuthors()
+        public async Task<ActionResult<IEnumerable<AppAuthors>>> GetAuthors([FromQuery]AuthorsParams authorsParams)
         {
-            return await _context.Authors.ToListAsync();
+            var query = _context.Authors.AsQueryable();
+            if(authorsParams.fromAuthorDateOfBirth != null && authorsParams.toAuthorDateOfBirth != null)
+            {
+                query = query.Where(u => u.Date_of_Birth >=  authorsParams.fromAuthorDateOfBirth && u.Date_of_Birth <= authorsParams.toAuthorDateOfBirth);
+            }
+
+            if(authorsParams.fromAuthorDateOfDeath != null && authorsParams.toAuthorDateOfDeath != null)
+            {
+                query = query.Where(u => u.Date_of_death >= authorsParams.fromAuthorDateOfDeath && u.Date_of_death <= authorsParams.toAuthorDateOfDeath);
+            }
+
+            return await query.ToListAsync();
         }
 
-        [HttpGet("{id}")]
-
-        public async Task<ActionResult<AppAuthors>> GetAuthor(int id)
-        {
-            return await _context.Authors.FindAsync(id); 
-        }
 
         [HttpPost("add")]
 

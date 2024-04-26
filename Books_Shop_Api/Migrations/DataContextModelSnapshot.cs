@@ -149,7 +149,7 @@ namespace Books_Shop_Api.Migrations
                     b.Property<DateTime?>("Date_of_Dismissal")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("Hirу_Date")
+                    b.Property<DateTime>("Hiry_Date")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Job_Title")

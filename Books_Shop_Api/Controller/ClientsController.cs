@@ -1,5 +1,6 @@
 ﻿using Books_Shop_Api.Data;
 using Books_Shop_Api.Entities;
+using Books_Shop_Api.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,9 +17,25 @@ namespace Books_Shop_Api.Controller
 
         [HttpGet]
 
-        public async Task<ActionResult<IEnumerable<AppClients>>> GetClients()
+        public async Task<ActionResult<IEnumerable<AppClients>>> GetClients([FromQuery]ClientsParams clientParams)
         {
-            return await _context.Clients.ToListAsync();
+            var query = _context.Clients.AsQueryable();
+            if (clientParams.fromClientsDateOfBirth != null && clientParams.toClientsDateOfBirth != null)
+            {
+                query = query.Where(u => u.Date_of_Birth >= clientParams.fromClientsDateOfBirth && u.Date_of_Birth <= clientParams.toClientsDateOfBirth);
+            }
+
+            if(clientParams.fromClientRegistrationDate !=null && clientParams.toClientRegistrationDate != null)
+            {
+                query = query.Where(u => u.Registration_Date >= clientParams.fromClientRegistrationDate && u.Registration_Date <= clientParams.toClientRegistrationDate);
+            }
+
+            if(clientParams.fromClientPersonalDiscount != null && clientParams.toClientPersonalDiscount != null)
+            {
+                query = query.Where(u => u.Personal_Discount >= clientParams.fromClientPersonalDiscount && u.Personal_Discount <= clientParams.toClientPersonalDiscount);
+            }
+
+            return await query.ToListAsync();
         }
 
         [HttpPost("add")]
@@ -73,7 +90,7 @@ namespace Books_Shop_Api.Controller
 
             var clientCheck = _context.Clients.Where(e => e.Id == id).AsNoTracking().FirstOrDefault();
             if (clientCheck is null)
-                return BadRequest("Author object is null");
+                return BadRequest("Client object is null");
 
             _context.Clients.Remove(clientCheck);
             await _context.SaveChangesAsync();
